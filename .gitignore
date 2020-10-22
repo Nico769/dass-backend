@@ -1,0 +1,11 @@
+HELP.md
+.gradle
+gradle*
+build/
+src/test
+*.bk
+
+### IntelliJ IDEA ###
+.idea
+
+
