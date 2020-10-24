@@ -1,16 +1,12 @@
 package org.nico.issuetracker.issue;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import java.util.List;
 
-@Service
-public class IssueService {
-    private final IssueRepository issueRepository;
-
-    @Autowired
-    public IssueService(IssueRepository issueRepository){
-        this.issueRepository = issueRepository;
-    }
-
-
+public interface IssueService {
+    List<Issue> listAllIssues();
+    List<Issue> listAllIssuesByStatus(String status);
+    Issue getIssueById(Long id);
+    Issue addNewIssue(String title, String description);
+    Issue updateIssue(Long id, Issue newIssue);
+    void removeIssueById(Long id);
 }

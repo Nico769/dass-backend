@@ -5,8 +5,9 @@ package org.nico.issuetracker.issue;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import static org.nico.issuetracker.issue.Issue.IssueStatus;
+
 import java.util.List;
-import java.util.UUID;
 
 @Repository
 public interface IssueRepository extends CrudRepository<Issue, Long> {
@@ -14,13 +15,13 @@ public interface IssueRepository extends CrudRepository<Issue, Long> {
     List<Issue> findAll();
 
     default List<Issue> findAllWhereIssueStatusIsOpen() {
-        return findAllByStatus(Issue.IssueStatus.OPEN);
+        return findAllByStatus(IssueStatus.OPEN);
     }
 
     default List<Issue> findAllWhereIssueStatusIsClosed() {
-        return findAllByStatus(Issue.IssueStatus.CLOSED);
+        return findAllByStatus(IssueStatus.CLOSED);
     }
 
-    List<Issue> findAllByStatus(Issue.IssueStatus status);
+    List<Issue> findAllByStatus(IssueStatus status);
 
 }
