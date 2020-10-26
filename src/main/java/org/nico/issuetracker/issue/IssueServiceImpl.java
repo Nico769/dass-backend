@@ -38,8 +38,8 @@ public class IssueServiceImpl implements IssueService {
     }
 
     @Override
-    public Issue addNewIssue(UUID uuid, String title, String description) {
-        return issueRepository.save(new Issue(uuid, title, description));
+    public Issue addNewIssue(Issue issue) {
+        return issueRepository.save(issue);
     }
 
     @Override

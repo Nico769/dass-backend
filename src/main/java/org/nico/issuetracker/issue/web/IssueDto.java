@@ -14,10 +14,17 @@ public class IssueDto {
     String description;
     IssueStatus status;
 
-    public static IssueDto fromIssue(Issue issue){
+    public static IssueDto convertToDto(Issue issue) {
         return new IssueDto(issue.getUuid(),
                 issue.getTitle(),
                 issue.getDescription(),
                 issue.getStatus());
+    }
+
+    public static Issue convertToEntity(IssueDto issueDto) {
+        return new Issue(issueDto.getUuid(),
+                issueDto.getTitle(),
+                issueDto.getDescription(),
+                issueDto.getStatus());
     }
 }

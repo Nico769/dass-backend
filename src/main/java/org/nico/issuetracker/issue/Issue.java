@@ -29,12 +29,13 @@ public class Issue {
     private String title;
     private String description;
     @Enumerated(EnumType.STRING)
-    private IssueStatus status = IssueStatus.OPEN;
+    private IssueStatus status;
 
-    public Issue(UUID uuid, String title, String description) {
+    public Issue(UUID uuid, String title, String description, IssueStatus status) {
         this.uuid = uuid;
         this.title = title;
         this.description = description;
+        this.status = status;
     }
 
     @Override

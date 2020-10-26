@@ -7,7 +7,7 @@ public interface IssueService {
     List<Issue> listAllIssues();
     List<Issue> listAllIssuesByStatus(String status);
     Issue getIssueByUuid(UUID uuid);
-    Issue addNewIssue(UUID uuid, String title, String description);
+    Issue addNewIssue(Issue issue);
     Issue updateIssue(UUID uuid, Issue newIssue);
     void removeIssueByUuid(UUID uuid);
 }
