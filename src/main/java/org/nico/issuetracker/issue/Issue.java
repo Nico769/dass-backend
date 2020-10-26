@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
@@ -14,12 +15,15 @@ import javax.validation.constraints.Size;
 public class Issue {
     public enum IssueStatus {
         OPEN,
-        CLOSED;
+        CLOSED
     }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Column(unique = true)
+    @NotNull
+    private final UUID uuid;
     @NotNull
     @Size(min = 5, message = "Title must be at least 5 characters long")
     private String title;
@@ -27,7 +31,8 @@ public class Issue {
     @Enumerated(EnumType.STRING)
     private IssueStatus status = IssueStatus.OPEN;
 
-    public Issue(String title, String description) {
+    public Issue(UUID uuid, String title, String description) {
+        this.uuid = uuid;
         this.title = title;
         this.description = description;
     }
@@ -36,6 +41,7 @@ public class Issue {
     public String toString() {
         return "Issue{" +
                 "id=" + id +
+                ", uuid='" + uuid + '\'' +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", status=" + status +

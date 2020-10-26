@@ -8,10 +8,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 // Issue-related REST-APIs are "contained" within /api/issues URL
 @RequestMapping(path = "/api/issues")
+@CrossOrigin("*")
 public class IssueController {
     private final IssueService issueService;
 
@@ -26,43 +29,49 @@ public class IssueController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    List<Issue> readAll() {
-        return issueService.listAllIssues();
+    List<IssueDto> readAll() {
+        List<Issue> issues = issueService.listAllIssues();
+        // Transform the retrieved issues to DTO objects.
+        // This prevents leaking the Issue's id field.
+        return issues.stream().map(IssueDto::fromIssue).collect(Collectors.toList());
     }
 
     // Specify params to avoid ambiguity with readAll GET.
     @GetMapping(params = "is_status")
     @ResponseStatus(HttpStatus.OK)
-    List<Issue> readAllByIssueStatus(
+    List<IssueDto> readAllByIssueStatus(
             @RequestParam(value = "is_status") String status) {
-        return issueService.listAllIssuesByStatus(status);
+        List<Issue> issues = issueService.listAllIssuesByStatus(status);
+        return issues.stream().map(IssueDto::fromIssue).collect(Collectors.toList());
     }
 
     // @RequestBody expects an entire Entity in the body.
     // I'll just use Jackson ObjectNode for now.
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    Issue createIssue(@RequestBody ObjectNode rcvJson){
-        return issueService.addNewIssue(
+    IssueDto createIssue(@RequestBody ObjectNode rcvJson){
+        Issue newIssue = issueService.addNewIssue(
+                UUID.fromString(rcvJson.get("uuid").asText()),
                 rcvJson.get("title").asText(),
                 rcvJson.get("description").asText());
+        return IssueDto.fromIssue(newIssue);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{uuid}")
     @ResponseStatus(HttpStatus.OK)
-    Issue readIssue(@PathVariable Long id){
-        return issueService.getIssueById(id);
+    IssueDto readIssue(@PathVariable UUID uuid){
+        return IssueDto.fromIssue(issueService.getIssueByUuid(uuid));
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/{uuid}")
     @ResponseStatus(HttpStatus.OK)
-    Issue partialUpdateIssue(@PathVariable Long id, @RequestBody Issue patchedIssue){
-        return issueService.updateIssue(id, patchedIssue);
+    IssueDto partialUpdateIssue(@PathVariable UUID uuid, @RequestBody Issue patchedIssue){
+        return IssueDto.fromIssue(issueService.updateIssue(uuid, patchedIssue));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{uuid}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void deleteIssue(@PathVariable Long id){
-        issueService.removeIssueById(id);
+    void deleteIssue(@PathVariable UUID uuid){
+        issueService.removeIssueByUuid(uuid);
     }
 }

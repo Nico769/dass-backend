@@ -1,12 +1,13 @@
 package org.nico.issuetracker.issue;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface IssueService {
     List<Issue> listAllIssues();
     List<Issue> listAllIssuesByStatus(String status);
-    Issue getIssueById(Long id);
-    Issue addNewIssue(String title, String description);
-    Issue updateIssue(Long id, Issue newIssue);
-    void removeIssueById(Long id);
+    Issue getIssueByUuid(UUID uuid);
+    Issue addNewIssue(UUID uuid, String title, String description);
+    Issue updateIssue(UUID uuid, Issue newIssue);
+    void removeIssueByUuid(UUID uuid);
 }

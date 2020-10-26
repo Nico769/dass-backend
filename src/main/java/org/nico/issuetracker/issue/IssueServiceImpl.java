@@ -4,9 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import static org.nico.issuetracker.issue.Issue.IssueStatus;
-
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import static org.nico.issuetracker.issue.Issue.IssueStatus;
 
 @Service
 public class IssueServiceImpl implements IssueService {
@@ -31,18 +33,18 @@ public class IssueServiceImpl implements IssueService {
     }
 
     @Override
-    public Issue getIssueById(Long id) {
-        return issueRepository.findById(id).orElseThrow();
+    public Issue getIssueByUuid(UUID uuid) {
+        return issueRepository.findByUuid(uuid).orElseThrow();
     }
 
     @Override
-    public Issue addNewIssue(String title, String description) {
-        return issueRepository.save(new Issue(title, description));
+    public Issue addNewIssue(UUID uuid, String title, String description) {
+        return issueRepository.save(new Issue(uuid, title, description));
     }
 
     @Override
-    public Issue updateIssue(Long id, Issue newIssue) {
-        Issue toUpdateIssue = issueRepository.findById(id).orElseThrow();
+    public Issue updateIssue(UUID uuid, Issue newIssue) {
+        Issue toUpdateIssue = issueRepository.findByUuid(uuid).orElseThrow();
         String newIssueTitle = newIssue.getTitle();
         String newIssueDescription = newIssue.getDescription();
         IssueStatus newIssueStatus = newIssue.getStatus();
@@ -60,11 +62,14 @@ public class IssueServiceImpl implements IssueService {
     }
 
     @Override
-    public void removeIssueById(Long id) {
-        // Do nothing if the resource does not exist upon a deletion request.
+    public void removeIssueByUuid(UUID uuid) {
         try {
-            issueRepository.deleteById(id);
+            // For some reasons I can't get the repository to perform a deletion by UUID.
+            // Thus, I'll fallback to a deleteById
+            Optional<Issue> toDeleteIssue = issueRepository.findByUuid(uuid);
+            toDeleteIssue.ifPresent(issue -> issueRepository.deleteById(issue.getId()));
         }
+        // There is nothing to do since the resource does not exist.
         catch (EmptyResultDataAccessException ignored) {}
     }
 }

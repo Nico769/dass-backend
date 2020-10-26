@@ -5,9 +5,11 @@ package org.nico.issuetracker.issue;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import static org.nico.issuetracker.issue.Issue.IssueStatus;
-
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import static org.nico.issuetracker.issue.Issue.IssueStatus;
 
 @Repository
 public interface IssueRepository extends CrudRepository<Issue, Long> {
@@ -24,4 +26,5 @@ public interface IssueRepository extends CrudRepository<Issue, Long> {
 
     List<Issue> findAllByStatus(IssueStatus status);
 
+    Optional<Issue> findByUuid(UUID uuid);
 }
