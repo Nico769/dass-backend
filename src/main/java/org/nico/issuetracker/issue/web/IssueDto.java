@@ -7,6 +7,8 @@ import java.util.UUID;
 
 import static org.nico.issuetracker.issue.Issue.IssueStatus;
 
+// Implementation of a DTO (Data Transfer Object) pattern for the Issue entity.
+// In this case, the pattern prevents leaking the Issue's id field to the clients.
 @Value
 public class IssueDto {
     UUID uuid;

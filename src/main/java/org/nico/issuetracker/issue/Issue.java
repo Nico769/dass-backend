@@ -37,15 +37,4 @@ public class Issue {
         this.description = description;
         this.status = status;
     }
-
-    @Override
-    public String toString() {
-        return "Issue{" +
-                "id=" + id +
-                ", uuid='" + uuid + '\'' +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", status=" + status +
-                '}';
-    }
 }

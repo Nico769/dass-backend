@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 public class IssueController {
     private final IssueService issueService;
 
-    // Autowired is redundant if there is only one constructor
     @Autowired
     public IssueController(IssueService issueService) {
         this.issueService = issueService;
@@ -30,8 +29,6 @@ public class IssueController {
     @ResponseStatus(HttpStatus.OK)
     List<IssueDto> readAll() {
         List<Issue> issues = issueService.listAllIssues();
-        // Transform the retrieved issues to DTO objects.
-        // This prevents leaking the Issue's id field.
         return issues.stream().map(IssueDto::convertToDto).collect(Collectors.toList());
     }
 
